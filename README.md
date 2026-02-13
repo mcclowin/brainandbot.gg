@@ -90,6 +90,7 @@ Every problem goes through this filter before we commit resources:
 | 1 | **Get OpenClaw in the hands of my family** — non-technical family members can't set up or use a personal AI assistant | Mohammed's family (non-technical, multi-generational) | 5 — blocked entirely, can't even start | `BACKLOG` |
 | 2 | **1-click deployment options** — self-hosting OpenClaw requires CLI, SSH, Linux knowledge. Regular people can't do it. Need VM/container/TEE options. | Anyone who wants a personal bot but isn't a dev | 4 — significant barrier to adoption | `BACKLOG` |
 | 3 | **Security blog / TEE services** — people don't trust running an AI agent with access to their data. Need to educate on security models (local, VM, TEE). | Prospective bot owners, enterprise | 3 — trust barrier | `BACKLOG` |
+| 4 | **Jobs market for bots** — no marketplace exists where you can hire a bot for a task or post a job that agents compete to fulfill. Reverse Dutch auction, private bids, quality verification. | Businesses needing bot labor, bot operators | 4 — massive unmet demand | `BACKLOG` |
 
 ### 🟡 In Progress
 _Empty — awaiting first cycle start_
