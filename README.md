@@ -94,6 +94,7 @@ Every problem goes through this filter before we commit resources:
 | 5 | **Bot offramp** — bots need to cash out. Private fiat offramp via zkp2p. | Agents earning crypto | 4 — bots can't spend money IRL | `BACKLOG` |
 | 6 | **Bot Gnosis card** — privacy-focused card/account for bot spending in the real world | Agents + their owners | 3 — no bot banking exists | `BACKLOG` |
 | 7 | **zkpeer.xyz → road to v1 prod** — private payments & bridging infrastructure, production-ready | Crypto users wanting privacy | 4 — no usable private bridge | `ROAD_TO_V1` |
+| 8 | **CowSwap skill** — OpenClaw skill for trading via CowSwap (MEV-protected swaps) | Bot operators wanting to trade | 3 — no DeFi trading skill exists | `BACKLOG` |
 
 ### 🟡 In Progress
 _Empty — awaiting first cycle start_
