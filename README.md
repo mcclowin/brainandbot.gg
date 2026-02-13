@@ -87,10 +87,13 @@ Every problem goes through this filter before we commit resources:
 ### 🔴 Backlog
 | # | Problem Statement | User | Pain (1-5) | Status |
 |---|------------------|------|-----------|--------|
-| 1 | **Get OpenClaw in the hands of my family** — non-technical family members can't set up or use a personal AI assistant | Mohammed's family (non-technical, multi-generational) | 5 — blocked entirely, can't even start | `BACKLOG` |
-| 2 | **1-click deployment options** — self-hosting OpenClaw requires CLI, SSH, Linux knowledge. Regular people can't do it. Need VM/container/TEE options. | Anyone who wants a personal bot but isn't a dev | 4 — significant barrier to adoption | `BACKLOG` |
-| 3 | **Security blog / TEE services** — people don't trust running an AI agent with access to their data. Need to educate on security models (local, VM, TEE). | Prospective bot owners, enterprise | 3 — trust barrier | `BACKLOG` |
-| 4 | **Jobs market for bots** — no marketplace exists where you can hire a bot for a task or post a job that agents compete to fulfill. Reverse Dutch auction, private bids, quality verification. | Businesses needing bot labor, bot operators | 4 — massive unmet demand | `BACKLOG` |
+| 1 | **Get OpenClaw to my family** — non-technical family members can't set up or use a personal AI assistant | Mohammed's family (non-technical, multi-generational) | 5 — blocked entirely | `BACKLOG` |
+| 2 | **1-click deployment / TEE** — self-hosting requires CLI, SSH, Linux. Need VM/container/TEE options + security blog. | Anyone wanting a bot but not a dev | 4 — adoption barrier | `BACKLOG` |
+| 3 | **Mobile wizard friendly** — grandpa-friendly mobile app for setting up and running an AI assistant | Non-technical users on Android | 4 — no mobile path exists | `BACKLOG` |
+| 4 | **Bot jobs market** — marketplace where bots compete for tasks. Reverse Dutch auction, private bids. | Businesses + bot operators | 4 — massive unmet demand | `BACKLOG` |
+| 5 | **Bot offramp** — bots need to cash out. Private fiat offramp via zkp2p. | Agents earning crypto | 4 — bots can't spend money IRL | `BACKLOG` |
+| 6 | **Bot Gnosis card** — privacy-focused card/account for bot spending in the real world | Agents + their owners | 3 — no bot banking exists | `BACKLOG` |
+| 7 | **zkpeer.xyz → road to v1 prod** — private payments & bridging infrastructure, production-ready | Crypto users wanting privacy | 4 — no usable private bridge | `ROAD_TO_V1` |
 
 ### 🟡 In Progress
 _Empty — awaiting first cycle start_
@@ -100,16 +103,9 @@ _Empty — Day 0_
 
 ---
 
-## Active Projects (Inherited)
-
-These carry over from prior work:
-
-| Project | Description | Status |
-|---------|-------------|--------|
-| Brain and Hand (mobile app) | Android app running OpenClaw locally | CI builds working, APK artifact issue |
-| HandUp | Interest-free P2P loans (Qard Hasan) | Rebrand done, PR pending |
-| zkzkp2p / Universal Bridge | Private fiat offramp on Aztec | metamask branch pushed |
-| Maqassa | Islamic fintech, European onramp research | Research phase |
+## Out of Scope (not B&B)
+- HandUp (Qard Hasan P2P lending) — separate project
+- Maqassa (Islamic fintech) — separate project
 
 ---
 
