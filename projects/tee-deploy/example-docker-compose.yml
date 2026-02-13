@@ -1,0 +1,129 @@
+version: "3.8"
+
+services:
+  openclaw:
+    image: node:22-slim
+    working_dir: /app
+    command: >
+      bash -c "
+        set -e;
+
+        echo '📦 Installing OpenClaw...';
+        npm install -g openclaw@latest pnpm 2>&1 | tail -1;
+
+        echo '⚙️ Writing config...';
+        export OPENCLAW_HOME=/app/.openclaw;
+        mkdir -p $${OPENCLAW_HOME}/agents/main/agent $${OPENCLAW_HOME}/workspace;
+
+        # ── File 1: openclaw.json (main config) ──
+        cat > $${OPENCLAW_HOME}/openclaw.json << 'CONFIGEOF'
+        {
+          "meta": {
+            "lastTouchedVersion": "2026.2.12",
+            "lastTouchedAt": "2026-02-13T00:00:00.000Z"
+          },
+          "wizard": {
+            "lastRunAt": "2026-02-13T00:00:00.000Z",
+            "lastRunVersion": "2026.2.12",
+            "lastRunCommand": "onboard",
+            "lastRunMode": "local"
+          },
+          "auth": {
+            "profiles": {
+              "anthropic:default": {
+                "provider": "anthropic",
+                "mode": "token"
+              }
+            }
+          },
+          "agents": {
+            "defaults": {
+              "workspace": "/app/workspace",
+              "compaction": { "mode": "safeguard" },
+              "maxConcurrent": 4,
+              "subagents": { "maxConcurrent": 8 }
+            }
+          },
+          "messages": {
+            "ackReactionScope": "group-mentions"
+          },
+          "commands": {
+            "native": "auto",
+            "nativeSkills": "auto"
+          },
+          "channels": {
+            "telegram": {
+              "enabled": true,
+              "commands": { "native": false },
+              "dmPolicy": "allowlist",
+              "botToken": "YOUR_TELEGRAM_BOT_TOKEN",
+              "allowFrom": ["YOUR_TELEGRAM_USER_ID"],
+              "groupPolicy": "allowlist",
+              "streamMode": "partial"
+            }
+          },
+          "gateway": {
+            "port": 18789,
+            "mode": "local",
+            "bind": "0.0.0.0",
+            "auth": {
+              "mode": "token",
+              "token": "RANDOM_GENERATED_GATEWAY_TOKEN"
+            },
+            "tailscale": {
+              "mode": "off",
+              "resetOnExit": false
+            }
+          },
+          "skills": {
+            "install": { "nodeManager": "pnpm" }
+          },
+          "plugins": {
+            "entries": {
+              "telegram": { "enabled": true }
+            }
+          }
+        }
+        CONFIGEOF
+
+        # ── File 2: auth-profiles.json (actual API key) ──
+        cat > $${OPENCLAW_HOME}/agents/main/agent/auth-profiles.json << 'AUTHEOF'
+        {
+          "version": 1,
+          "profiles": {
+            "anthropic:default": {
+              "type": "token",
+              "provider": "anthropic",
+              "token": "sk-ant-YOUR_ACTUAL_ANTHROPIC_KEY"
+            }
+          },
+          "lastGood": {},
+          "usageStats": {}
+        }
+        AUTHEOF
+
+        # ── File 3: SOUL.md (bot personality) ──
+        cat > $${OPENCLAW_HOME}/workspace/SOUL.md << 'SOULEOF'
+        # SOUL.md
+        You are a helpful personal AI assistant. Be concise, friendly, and proactive.
+        Respect privacy. Be honest about being an AI.
+        SOULEOF
+
+        # Lock down secrets
+        chmod 600 $${OPENCLAW_HOME}/openclaw.json;
+        chmod 600 $${OPENCLAW_HOME}/agents/main/agent/auth-profiles.json;
+
+        echo '🚀 Starting OpenClaw gateway...';
+        openclaw gateway start --foreground
+      "
+    environment:
+      - OPENCLAW_HOME=/app/.openclaw
+      - NODE_ENV=production
+    ports:
+      - "18789:18789"
+    volumes:
+      - openclaw-data:/app/.openclaw
+    restart: unless-stopped
+
+volumes:
+  openclaw-data:
