@@ -96,8 +96,11 @@ Every problem goes through this filter before we commit resources:
 | 7 | **zkpeer.xyz → road to v1 prod** — private payments & bridging infrastructure, production-ready | Crypto users wanting privacy | 4 — no usable private bridge | `ROAD_TO_V1` |
 | 8 | **CowSwap skill** — OpenClaw skill for trading via CowSwap (MEV-protected swaps) | Bot operators wanting to trade | 3 — no DeFi trading skill exists | `BACKLOG` |
 
-### 🟡 In Progress
-_Empty — awaiting first cycle start_
+### 🟡 In Progress — Cycle #1 (Feb 13-15)
+| # | Problem | Track |
+|---|---------|-------|
+| 1 | Get OpenClaw to family | Local i5 server setup |
+| 2 | 1-click TEE deployment service | Cloud TEE product |
 
 ### 🟢 Done
 _Empty — Day 0_
