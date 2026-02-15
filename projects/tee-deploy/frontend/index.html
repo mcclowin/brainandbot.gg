@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hatchery — Bot Deploy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #0c0e1a;
+    --panel: #111428;
+    --border: #2a2d4a;
+    --border-hi: #4a4d7a;
+    --dim: #4a4d6a;
+    --text: #8a8db0;
+    --bright: #c8cbf0;
+    --white: #e8eaff;
+    --cyan: #67e8f9;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --accent: #818cf8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ── BIOS-style chrome ── */
+  .bios-frame {
+    max-width: 860px;
+    margin: 24px auto;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(129,140,248,0.05);
+  }
+
+  /* Top bar */
+  .top-bar {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-bar .version { font-weight: 400; font-size: 11px; opacity: 0.7; }
+
+  /* Navigation tabs */
+  .nav-tabs {
+    display: flex;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-tab {
+    padding: 10px 20px;
+    font-size: 12px;
+    color: var(--dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+  }
+  .nav-tab:hover { color: var(--bright); background: rgba(129,140,248,0.05); }
+  .nav-tab.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+    background: rgba(103,232,249,0.05);
+  }
+
+  /* Main content area */
+  .main {
+    display: flex;
+    min-height: 520px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    flex-shrink: 0;
+  }
+  .sidebar-section {
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sidebar-item {
+    padding: 6px 16px;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 12px;
+    border-left: 2px solid transparent;
+    transition: all 0.1s;
+  }
+  .sidebar-item:hover { color: var(--bright); background: rgba(255,255,255,0.02); }
+  .sidebar-item.active {
+    color: var(--cyan);
+    border-left-color: var(--cyan);
+    background: rgba(103,232,249,0.05);
+  }
+  .sidebar-item .status {
+    float: right;
+    font-size: 10px;
+  }
+  .status-on { color: var(--green); }
+  .status-off { color: var(--dim); }
+  .status-err { color: var(--red); }
+
+  /* Content */
+  .content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .content-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .content-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-bottom: 24px;
+  }
+
+  /* Form groups */
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    font-size: 11px;
+    color: var(--bright);
+    margin-bottom: 6px;
+    display: block;
+    letter-spacing: 0.5px;
+  }
+  .form-hint {
+    font-size: 10px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  input, select, textarea {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--bright);
+    padding: 8px 12px;
+    border-radius: 3px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--dim); }
+
+  select { cursor: pointer; }
+  select option { background: var(--panel); color: var(--bright); }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(42,45,74,0.5);
+  }
+  .toggle-label { font-size: 12px; color: var(--text); }
+  .toggle-label span { display: block; font-size: 10px; color: var(--dim); margin-top: 2px; }
+  .toggle {
+    width: 36px; height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--white);
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; margin-top: 28px; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 10px 24px;
+    border: 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { background: var(--cyan); border-color: var(--cyan); }
+  .btn-secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-secondary:hover { border-color: var(--bright); color: var(--bright); }
+  .btn-danger {
+    background: transparent;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .btn-danger:hover { background: var(--red); color: var(--bg); }
+
+  /* Status cards */
+  .status-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .status-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .status-card-title { font-size: 12px; color: var(--bright); font-weight: 500; }
+  .badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .badge-running { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+  .badge-stopped { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .badge-starting { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 4px 0;
+    color: var(--dim);
+  }
+  .status-row .val { color: var(--text); }
+
+  /* Log area */
+  .log-area {
+    background: #080a14;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 16px;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--dim);
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 16px;
+  }
+  .log-line { white-space: pre-wrap; }
+  .log-time { color: var(--dim); }
+  .log-info { color: var(--cyan); }
+  .log-ok { color: var(--green); }
+  .log-err { color: var(--red); }
+  .log-warn { color: var(--amber); }
+
+  /* Bottom bar — BIOS style */
+  .bottom-bar {
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .bottom-bar kbd {
+    background: var(--border);
+    color: var(--bright);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    margin-right: 4px;
+  }
+
+  /* ── Screens ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Separator */
+  .sep {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .bios-frame { margin: 0; border: none; border-radius: 0; }
+    .main { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 8px 0; display: flex; overflow-x: auto; }
+    .sidebar-section { margin-bottom: 0; }
+    .sidebar-item { white-space: nowrap; padding: 6px 12px; border-left: none; border-bottom: 2px solid transparent; }
+    .sidebar-item.active { border-left: none; border-bottom-color: var(--cyan); }
+    .sidebar-label { display: none; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bios-frame">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <span>🥚 HATCHERY</span>
+    <span class="version">v0.1.0 — TEE Bot Deploy</span>
+  </div>
+
+  <!-- Nav tabs -->
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('deploy')">DEPLOY</div>
+    <div class="nav-tab" onclick="showTab('instances')">INSTANCES</div>
+    <div class="nav-tab" onclick="showTab('settings')">SETTINGS</div>
+  </div>
+
+  <div class="main">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Your Bots</div>
+      </div>
+      <div class="sidebar-item active">
+        abuclaw
+        <span class="status status-off">● off</span>
+      </div>
+      <div class="sidebar-item">
+        mcclowin
+        <span class="status status-on">● live</span>
+      </div>
+      <div class="sidebar-item" style="color: var(--dim); font-style: italic;">
+        + spawn new
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ═══ DEPLOY SCREEN ═══ -->
+      <div class="screen active" id="screen-deploy">
+        <div class="content-title">Spawn a New Bot</div>
+        <div class="content-sub">Deploy an OpenClaw agent into a Trusted Execution Environment</div>
+
+        <div class="form-group">
+          <label class="form-label">Bot Name</label>
+          <input type="text" placeholder="e.g. abuclaw" id="bot-name">
+          <div class="form-hint">Lowercase, no spaces. This is your bot's identity.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="form-group">
+          <label class="form-label">Telegram Bot Token</label>
+          <input type="password" placeholder="123456:ABC-DEF..." id="tg-token">
+          <div class="form-hint">Get one from <a href="https://t.me/BotFather" style="border:none;">@BotFather</a></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Telegram ID</label>
+          <input type="text" placeholder="e.g. 1310278446" id="tg-owner">
+          <div class="form-hint">Only this ID can talk to your bot. Get yours from <a href="https://t.me/userinfobot" style="border:none;">@userinfobot</a></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="form-group">
+          <label class="form-label">AI Provider</label>
+          <select id="ai-provider">
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="openai">OpenAI (GPT)</option>
+            <option value="google">Google (Gemini)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">API Key</label>
+          <input type="password" placeholder="sk-..." id="ai-key">
+          <div class="form-hint">Your key is encrypted end-to-end to the TEE. We never see it.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="form-group">
+          <label class="form-label">Instance Size</label>
+          <select id="instance-size">
+            <option value="small">Small — 1 vCPU, 2GB RAM ($0.06/hr)</option>
+            <option value="medium">Medium — 2 vCPU, 4GB RAM ($0.12/hr)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            Enable TEE Attestation
+            <span>Hardware proof that your keys are safe</span>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            Auto-restart on crash
+            <span>Bot restarts automatically if it goes down</span>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="deploy()">▶ SPAWN</button>
+          <button class="btn btn-secondary">SAVE DRAFT</button>
+        </div>
+      </div>
+
+      <!-- ═══ INSTANCES SCREEN ═══ -->
+      <div class="screen" id="screen-instances">
+        <div class="content-title">Active Instances</div>
+        <div class="content-sub">Manage your deployed bots</div>
+
+        <div class="status-card">
+          <div class="status-card-header">
+            <span class="status-card-title">mcclowin</span>
+            <span class="badge badge-running">● RUNNING</span>
+          </div>
+          <div class="status-row"><span>Provider</span><span class="val">Phala Cloud (TDX)</span></div>
+          <div class="status-row"><span>Instance</span><span class="val">tdx.small — 1 vCPU, 2GB</span></div>
+          <div class="status-row"><span>Uptime</span><span class="val">14d 3h 22m</span></div>
+          <div class="status-row"><span>Cost (this month)</span><span class="val">$19.74</span></div>
+          <div class="status-row"><span>Attestation</span><span class="val" style="color:var(--green)">✓ verified</span></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary">LOGS</button>
+            <button class="btn btn-secondary">RESTART</button>
+            <button class="btn btn-danger">TERMINATE</button>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-card-header">
+            <span class="status-card-title">abuclaw</span>
+            <span class="badge badge-stopped">● STOPPED</span>
+          </div>
+          <div class="status-row"><span>Provider</span><span class="val">Phala Cloud (TDX)</span></div>
+          <div class="status-row"><span>Instance</span><span class="val">tdx.small — 1 vCPU, 2GB</span></div>
+          <div class="status-row"><span>Last active</span><span class="val">2h ago — crash</span></div>
+          <div class="status-row"><span>Attestation</span><span class="val" style="color:var(--dim)">— offline</span></div>
+          <div class="btn-row">
+            <button class="btn btn-primary">▶ RESPAWN</button>
+            <button class="btn btn-secondary">LOGS</button>
+            <button class="btn btn-danger">DELETE</button>
+          </div>
+        </div>
+
+        <!-- Log viewer -->
+        <div class="log-area">
+          <div class="log-line"><span class="log-time">19:14:02</span> <span class="log-ok">[ok]</span> Gateway started on ws://0.0.0.0:3000</div>
+          <div class="log-line"><span class="log-time">19:14:03</span> <span class="log-info">[info]</span> Telegram channel connected</div>
+          <div class="log-line"><span class="log-time">19:14:03</span> <span class="log-info">[info]</span> Model: anthropic/claude-sonnet-4-20250514</div>
+          <div class="log-line"><span class="log-time">19:14:05</span> <span class="log-ok">[ok]</span> Agent ready — waiting for messages</div>
+          <div class="log-line"><span class="log-time">19:15:12</span> <span class="log-info">[info]</span> Message from owner (1310278446)</div>
+          <div class="log-line"><span class="log-time">19:15:14</span> <span class="log-ok">[ok]</span> Response sent (1.2s, 847 tokens)</div>
+        </div>
+      </div>
+
+      <!-- ═══ SETTINGS SCREEN ═══ -->
+      <div class="screen" id="screen-settings">
+        <div class="content-title">Settings</div>
+        <div class="content-sub">Global configuration</div>
+
+        <div class="form-group">
+          <label class="form-label">Phala API Key</label>
+          <input type="password" placeholder="phala-api-..." id="phala-key">
+          <div class="form-hint">Required for TEE deployment. Get one at <a href="https://cloud.phala.network" style="border:none;">cloud.phala.network</a></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            Dark Mode
+            <span>Always dark. Bots don't need light.</span>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            Notifications
+            <span>Get notified when bots crash or restart</span>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">
+            Telemetry
+            <span>Anonymous usage stats. Off by default.</span>
+          </div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary">SAVE</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <div>
+      <kbd>Tab</kbd> Navigate
+      <kbd>Enter</kbd> Select
+      <kbd>Esc</kbd> Back
+    </div>
+    <div>brain&bots technologies © 2026</div>
+  </div>
+
+</div>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('screen-' + tab).classList.add('active');
+}
+
+function deploy() {
+  const name = document.getElementById('bot-name').value || 'unnamed';
+  const btn = event.target;
+  btn.textContent = '⏳ SPAWNING...';
+  btn.style.background = 'var(--amber)';
+  btn.style.borderColor = 'var(--amber)';
+  
+  setTimeout(() => {
+    btn.textContent = '✓ SPAWNED';
+    btn.style.background = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent = '▶ SPAWN';
+      btn.style.background = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  }, 3000);
+}
+</script>
+
+</body>
+</html>
