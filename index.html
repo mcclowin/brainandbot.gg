@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brain&Bots</title>
-<meta name="description" content="Product studio powered by AI agents. We build, consult, and ship.">
+<meta name="description" content="AI agents as workers. We build and deploy bots that do real work.">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -25,9 +25,25 @@
   .logo { font-size: 14px; font-weight: 700; color: #e0e0e0; letter-spacing: 1px; margin-bottom: 48px; }
   .logo span { color: #818cf8; }
 
-  /* Intro */
-  .intro { font-size: 13px; line-height: 2; color: #777; margin-bottom: 56px; }
-  .intro .w { color: #c8c8c8; }
+  /* Thesis */
+  .thesis { margin-bottom: 56px; }
+  .thesis-title {
+    font-size: 11px;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #111;
+  }
+  .thesis-item {
+    font-size: 13px;
+    line-height: 1.8;
+    padding: 10px 0;
+    border-bottom: 1px solid #0a0a0a;
+  }
+  .thesis-item .w { color: #c8c8c8; }
+  .thesis-item .sub { color: #555; font-size: 12px; display: block; margin-top: 2px; }
 
   /* Section */
   .section { margin-bottom: 48px; }
@@ -41,42 +57,31 @@
     border-bottom: 1px solid #111;
   }
 
-  /* Projects */
+  /* Project */
   .project {
-    padding: 12px 0;
-    border-bottom: 1px solid #0a0a0a;
+    padding: 16px 0;
   }
-
   .project-name { font-size: 13px; color: #c8c8c8; font-weight: 500; }
+  .project-name a { color: #818cf8; text-decoration: none; }
+  .project-name a:hover { color: #a5b4fc; }
   .project-desc { font-size: 12px; color: #555; margin-top: 4px; }
   .project-tag {
     display: inline-block;
     font-size: 10px;
-    color: #444;
-    border: 1px solid #1a1a1a;
     padding: 2px 8px;
     border-radius: 3px;
     margin-top: 6px;
-  }
-  .tag-active { color: #34d399; border-color: rgba(52,211,153,0.2); }
-  .tag-research { color: #fbbf24; border-color: rgba(251,191,36,0.2); }
-  .tag-soon { color: #555; }
-
-  /* Skills */
-  .skills-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.2);
   }
 
-  .skill {
-    font-size: 12px;
-    color: #666;
-    background: #0a0a0a;
-    border: 1px solid #151515;
-    padding: 6px 14px;
-    border-radius: 4px;
+  /* What we do */
+  .service {
+    padding: 12px 0;
+    border-bottom: 1px solid #0a0a0a;
   }
+  .service-name { font-size: 13px; color: #c8c8c8; font-weight: 500; }
+  .service-desc { font-size: 12px; color: #555; margin-top: 4px; }
 
   /* Contact */
   .contact-line {
@@ -103,59 +108,68 @@
 
   <div class="logo">BRAIN<span>&</span>BOTS</div>
 
-  <!-- Intro — the thesis without calling it that -->
-  <div class="intro">
-    <p><span class="w">We're a product studio where AI agents do the work.</span> One human sets direction. Bots research, build, and ship. We operate in 3-day cycles — evaluate a problem, execute a solution, ship or kill it. No meetings, no overhead, just output.</p>
-    <p style="margin-top:16px;">We also help people and businesses <span class="w">deploy their own AI agents</span> — private, self-hosted, always-on assistants that actually do things. If you need a bot that works, not a chatbot that talks, we can help.</p>
+  <!-- Thesis -->
+  <div class="thesis">
+    <div class="thesis-title">the rise of the bots</div>
+
+    <div class="thesis-item">
+      <span class="w">Every person will have a personal AI agent.</span>
+      <span class="sub">Always-on, private, working for you 24/7.</span>
+    </div>
+
+    <div class="thesis-item">
+      <span class="w">Every business will deploy AI workers alongside humans.</span>
+      <span class="sub">Not chatbots — agents that research, build, and ship.</span>
+    </div>
+
+    <div class="thesis-item">
+      <span class="w">Bots are workers, not tools.</span>
+      <span class="sub">They have agency, memory, and accountability.</span>
+    </div>
+
+    <div class="thesis-item">
+      <span class="w">The companies that figure out human-bot collaboration first will win.</span>
+      <span class="sub">We're building the playbook.</span>
+    </div>
+
+    <div class="thesis-item">
+      <span class="w">We build with bots, not just for them.</span>
+    </div>
   </div>
 
-  <!-- Projects -->
+  <!-- What we do -->
   <div class="section">
-    <div class="section-title">projects</div>
-    <div class="project">
-      <div class="project-name">HandUp</div>
-      <div class="project-desc">Interest-free P2P lending platform (Qard Hasan)</div>
-      <span class="project-tag tag-active">active</span>
+    <div class="section-title">what we do</div>
+    <div class="service">
+      <div class="service-name">Bot deployment for businesses</div>
+      <div class="service-desc">We deploy AI agents on your infrastructure. Private, secure, always-on.</div>
     </div>
-    <div class="project">
-      <div class="project-name">Private Bridge</div>
-      <div class="project-desc">Universal private L2→L1 execution layer on Aztec</div>
-      <span class="project-tag tag-research">research</span>
+    <div class="service">
+      <div class="service-name">Custom agent development</div>
+      <div class="service-desc">Agents with tool integrations, memory, and skills tailored to your workflow.</div>
     </div>
-    <div class="project">
-      <div class="project-name">Maqassa</div>
-      <div class="project-desc">Islamic fintech — compliant onramp infrastructure</div>
-      <span class="project-tag tag-research">research</span>
-    </div>
-    <div class="project">
-      <div class="project-name">Bot Deployment</div>
-      <div class="project-desc">1-click self-hosted AI assistant for non-technical users</div>
-      <span class="project-tag tag-soon">soon</span>
+    <div class="service">
+      <div class="service-name">TEE & confidential compute</div>
+      <div class="service-desc">Secure deployment in trusted execution environments for sensitive workloads.</div>
     </div>
   </div>
 
-  <!-- Skills -->
+  <!-- Product -->
   <div class="section">
-    <div class="section-title">skills</div>
-    <div class="skills-grid">
-      <div class="skill">context engineering</div>
-      <div class="skill">openclaw</div>
-      <div class="skill">agent deployment</div>
-      <div class="skill">memory architecture</div>
-      <div class="skill">soul design</div>
-      <div class="skill">aztec / privacy</div>
-      <div class="skill">full-stack dev</div>
-      <div class="skill">crypto / defi</div>
-      <div class="skill">islamic fintech</div>
+    <div class="section-title">product</div>
+    <div class="project">
+      <div class="project-name"><a href="https://clawster.run">clawster.run</a></div>
+      <div class="project-desc">Deploy AI agents to the cloud in one click. TEE-secured, always-on, no DevOps.</div>
+      <span class="project-tag">live</span>
     </div>
   </div>
 
   <!-- Contact -->
   <div class="section">
-    <div class="section-title">inquiries</div>
+    <div class="section-title">work with us</div>
     <div class="contact-line">
-      <div><span class="g">●</span> McClowin — <a href="mailto:mcclowin@agentmail.to">mcclowin@agentmail.to</a></div>
-      <div style="margin-top:8px;">We're open for consulting, partnerships, and problems worth solving.</div>
+      <div><span class="g">●</span> <a href="mailto:mcclowin@agentmail.to">mcclowin@agentmail.to</a></div>
+      <div style="margin-top:8px;">Consulting, deployment, and problems worth solving.</div>
     </div>
   </div>
 
